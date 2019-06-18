@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.RoleDao">
+    <resultMap id="roleMap" type="role">
+        <id property="roleId" column="rid"></id>
+        <result property="roleName" column="role_name"></result>
+        <result property="roleDesc" column="role_desc"></result>
+        <collection property="list" ofType="user" >
+            <id property="id" column="id"></id>
+            <result property="name" column="name"></result>
+            <result property="gender" column="gender"></result>
+            <result property="age" column="age"></result>
+            <result property="address" column="address"></result>
+            <result property="qq" column="qq"></result>
+            <result property="email" column="email"></result>
+            <result property="username" column="username"></result>
+            <result property="password" column="password"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="userMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="gender" column="gender"></result>
+        <result property="age" column="age"></result>
+        <result property="address" column="address"></result>
+        <result property="qq" column="qq"></result>
+        <result property="email" column="email"></result>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <collection property="roles" ofType="role" >
+            <id property="roleId" column="rid"></id>
+            <result property="roleName" column="role_name"></result>
+            <result property="roleDesc" column="role_desc"></result>
+        </collection>
+    </resultMap>
+<!--    用户查角色-->
+    <select id="findAll" resultMap="roleMap">
+    SELECT u.*,r.id as rid, r.role_name,r.role_desc FROM role r
+     LEFT OUTER JOIN user_role ur on r.id =ur.rid
+     LEFT OUTER JOIN userinf u on u.id =ur.uid;
+    </select>
+
+    <select id="findAlluser" resultMap="userMap">
+
+        SELECT u.*,r.id as rid, r.role_name,r.role_desc FROM userinf u
+         LEFT OUTER JOIN user_role ur on u.id =ur.uid
+         LEFT OUTER JOIN role r on ur.rid =r.id
+    </select>
+<!--角色查用户
+    SELECT u.*,r.id as rid, r.role_name,r.role_desc FROM role r
+    LEFT OUTER JOIN user_role ur on r.id =ur.rid
+    LEFT OUTER JOIN userinf u on u.id =ur.uid;-->
+
+</mapper>
